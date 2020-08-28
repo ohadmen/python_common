@@ -2,6 +2,12 @@ import numpy as np
 
 
 def apply_transformation(t: np.ndarray, pcl: np.ndarray):
+    """
+
+    :param t: input transformation, should be of sie dim+1
+    :param pcl: point to tranformed, could be Nxdim or MxNxdim
+    :return: transformed points, same size as pcl
+    """
     if t.shape == (4, 4):
         dim = 3
     elif t.shape == (3, 3):

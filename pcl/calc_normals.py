@@ -11,6 +11,11 @@ def crossN(a,b):
     return norm(c)
 
 def calc_normals(xyz):
+    """
+    calc normals of input pcl
+    :param xyz: NxMx3 point cloud, each coordinate in a different layer
+    :return: MxNx3 point normals
+    """
     assert(xyz.shape[2]==3)
     vu = np.roll(xyz,-1,axis=0)-xyz
     vr = np.roll(xyz, 1, axis=1)-xyz
