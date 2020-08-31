@@ -1,4 +1,5 @@
 import numpy as np
+from cv2.cv2 import Rodrigues
 
 
 def cpm(v):
@@ -10,8 +11,9 @@ def cpm(v):
 
 
 def rotatiom_matrix(rot_vec):
+    r = Rodrigues(rot_vec)[0]
     # Rodrigues' rotation formul
-    angle = np.linalg.norm(rot_vec)
-    axis = rot_vec / angle
-    r = np.cos(angle) * np.matrix(np.eye(3)) + np.sin(angle) * cpm(axis) + (1 - np.cos(angle)) * axis * axis.transpose()
+    # angle = np.linalg.norm(rot_vec)
+    # axis = rot_vec / angle
+    # r = np.cos(angle) * np.eye(3) + np.sin(angle) * cpm(axis) + (1 - np.cos(angle)) * axis * axis.transpose()
     return r

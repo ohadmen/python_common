@@ -10,6 +10,7 @@ def colvec2rgba(sp,col):
     return colmat
 
 def addColor(xyz, col):
+    xyz = xyz.astype(np.float32)
     if isinstance(col, str):
         if col == 'r':
             col = [1, 0, 0]
@@ -17,6 +18,8 @@ def addColor(xyz, col):
             col = [0, 1, 0]
         elif col == 'b':
             col = [0, 0, 1]
+        elif col == 'y':
+            col = [1, 1, 0]
         else:
             raise RuntimeError("unknown color name")
         col = colvec2rgba(xyz.shape,col)

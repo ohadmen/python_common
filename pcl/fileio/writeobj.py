@@ -12,11 +12,11 @@ def writeobj(fn,v,f):
         fp.write("#Machine: {}\n".format(socket.gethostname()))
         fp.write("#Date: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
         fp.write("#\n")
-        fp.write("# vertics: {}".format(v.shape[0]))
-        fp.write("# faces: {}".format(f.shape[0]))
+        fp.write("# vertics: {}\n".format(v.shape[0]))
+        fp.write("# faces: {}\n".format(f.shape[0]))
 
         np.apply_along_axis(lambda x: fp.write('v {} {} {}\n'.format(x[0], x[1], x[2])), axis=1, arr=v)
-        np.apply_along_axis(lambda x: fp.write('f {} {} {}\n'.format(x[0], x[1], x[2])), axis=1, arr=f)
+        np.apply_along_axis(lambda x: fp.write('f {:d} {:d} {:d}\n'.format(x[0], x[1], x[2])), axis=1, arr=f.astype(int)+1)
 
 
 
