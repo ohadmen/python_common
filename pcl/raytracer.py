@@ -38,7 +38,7 @@ class Raytracer:
         t = (uv * wu - uu * wv) / d
         if t < 0 or (s + t) > 1:
             return np.inf, 0
-        intensity = -b / np.linalg.norm(n)
+        intensity = max(0,-b / np.linalg.norm(n))
         return r, intensity
 
     def _ray_vol_intersection(self, q, n):
