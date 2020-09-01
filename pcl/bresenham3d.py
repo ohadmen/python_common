@@ -1,68 +1,42 @@
 import numpy as np
 
+def floor_q(v):
+    fv =np.floor(v)
+    is_round = v==fv
+    v = v.copy()
+    v[~is_round] =fv[~is_round]
+    v[is_round]-=1
+    return v
+def ceil_q(v):
+    fv =np.ceil(v)
+    is_round = v==fv
+    v = v.copy()
+    v[~is_round] =fv[~is_round]
+    v[is_round]+=1
+    return v
 
 def bresenham3d(q1, q2):
-    q1 = q1.copy()
-    pt_list = [q1.copy()]
-    d = np.abs(q2-q1)
-    if (q2[0] > q1[0]):
-        xs = 1
-    else:
-        xs = -1
-    if (q2[1] > q1[1]):
-        ys = 1
-    else:
-        ys = -1
-    if (q2[2] > q1[2]):
-        zs = 1
-    else:
-        zs = -1
+    n = q2 - q1
+    n = n / np.linalg.norm(n)
+    pt_list = []
+    q_next = q1.copy()
+    max_t = np.mean((q2-q1)/n)
+    acc_t = 0
+    while True:
 
-    # Driving axis is X-axis" 
-    if (d[0] >= d[1] and d[0] >= d[2]):
-        p1 = 2 * d[1] - d[0]
-        p2 = 2 * d[2] - d[0]
-        while (q1[0] != q2[0]):
-            q1[0] += xs
-            if (p1 >= 0):
-                q1[1] += ys
-                p1 -= 2 * d[0]
-            if (p2 >= 0):
-                q1[2] += zs
-                p2 -= 2 * d[0]
-            p1 += 2 * d[1]
-            p2 += 2 * d[2]
-            pt_list.append(q1.copy())
+        # p_a = floor_q(q_next)
+        # p_b = ceil_q(q_next)
+        p_a = np.floor(q_next-np.finfo(float).eps*1e3)
+        p_b = np.ceil(q_next+np.finfo(float).eps*1e3)
+        posible_t = np.r_[(p_a - q_next) / n, (p_b - q_next) / n]
+        posible_t = [x for x in posible_t if x > 0]
+        if len(posible_t)==0:
+            break
+        posible_t = np.min(posible_t)
+        acc_t +=posible_t
+        q_next = q_next + posible_t * n
+        if acc_t>max_t:
+            break
+        pt_list.append(q_next)
 
-            # Driving axis is Y-axis" 
-    elif (d[1] >= d[0] and d[1] >= d[2]):
-        p1 = 2 * d[0] - d[1]
-        p2 = 2 * d[2] - d[1]
-        while (q1[1] != q2[1]):
-            q1[1] += ys
-            if (p1 >= 0):
-                q1[0] += xs
-                p1 -= 2 * d[1]
-            if (p2 >= 0):
-                q1[2] += zs
-                p2 -= 2 * d[1]
-            p1 += 2 * d[0]
-            p2 += 2 * d[2]
-            pt_list.append(q1.copy())
-
-            # Driving axis is Z-axis" 
-    else:
-        p1 = 2 * d[1] - d[2]
-        p2 = 2 * d[0] - d[2]
-        while (q1[2] != q2[2]):
-            q1[2] += zs
-            if (p1 >= 0):
-                q1[1] += ys
-                p1 -= 2 * d[2]
-            if (p2 >= 0):
-                q1[0] += xs
-                p2 -= 2 * d[2]
-            p1 += 2 * d[1]
-            p2 += 2 * d[0]
-            pt_list.append(q1.copy())
-    return pt_list 
+    return pt_list

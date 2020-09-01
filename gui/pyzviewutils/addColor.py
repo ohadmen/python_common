@@ -3,9 +3,9 @@ import numpy as np
 from common.gui.pyzviewutils.rgba2floatcol import rgba2floatcol
 
 
-def colvec2rgba(sp,col):
-    colmat = np.ones(list(sp))
-    col = np.array(col).reshape(1,1,3)
+def colvec2rgba(n,col):
+    colmat = np.ones((n,len(col)))
+    col = np.array(col).reshape(1,1,-1)
     colmat = colmat*col
     return colmat
 
@@ -20,12 +20,16 @@ def addColor(xyz, col):
             col = [0, 0, 1]
         elif col == 'y':
             col = [1, 1, 0]
+        elif col == 'w':
+            col = [1, 1, 1]
+        elif col == 'k':
+            col = [0, 0, 0]
         else:
             raise RuntimeError("unknown color name")
-        col = colvec2rgba(xyz.shape,col)
+        col = colvec2rgba(xyz.shape[0],col)
         pass
-    elif len(col) == 3:
-        col = colvec2rgba(xyz.shape,col)
+    elif len(col) == 3 or len(col) == 4:
+        col = colvec2rgba(xyz.shape[0],col)
     elif isinstance(col, np.ndarray) and col.shape == xyz.shape:
         pass
     else:
