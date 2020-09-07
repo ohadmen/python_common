@@ -31,6 +31,7 @@ def addColor(xyz, col):
     elif len(col) == 3 or len(col) == 4:
         col = colvec2rgba(xyz.shape[0],col)
     elif isinstance(col, np.ndarray) and col.shape == xyz.shape:
+        col=np.expand_dims(col,0)
         pass
     else:
         raise RuntimeError("unknown color option")
