@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def floor_q(v):
     fv =np.floor(v)
     is_round = v==fv

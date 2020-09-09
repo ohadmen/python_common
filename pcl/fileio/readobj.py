@@ -1,4 +1,6 @@
 import numpy as np
+
+
 def readobj(fn):
     v=np.zeros((0,3))
     f = np.zeros((0, 3))
@@ -11,4 +13,3 @@ def readobj(fn):
     f = f-1#one based
     f = f.astype(int)
     return v,f
-

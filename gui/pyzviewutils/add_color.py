@@ -39,5 +39,3 @@ def add_color(xyz, col):
     rgba = rgba2floatcol(col)
     xyzc = np.c_[xyz.reshape(-1, 3), rgba.reshape(-1, 1)]
     return xyzc
-
-

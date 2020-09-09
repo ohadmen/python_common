@@ -1,7 +1,8 @@
-from .add_color import add_color
+import numpy as np
+
 from ...utils.apply_transformation import apply_transformation
 from ...utils.create_transformation import create_transformation
-import numpy as np
+from .add_color import add_color
 
 
 def add_rectangle(t=np.zeros(3), r=np.zeros(3), s=np.zeros(3),c='r'):

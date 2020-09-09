@@ -1,7 +1,8 @@
 import multiprocessing
-from functools import partial
 import numpy as np
+from functools import partial
 from typing import Callable
+
 
 class InlierData:
     def __init__(self, err, threshold, model_points):

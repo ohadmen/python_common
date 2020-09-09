@@ -1,8 +1,7 @@
-import  numpy as np
 import getpass
+import numpy as np
 import socket
 from datetime import datetime
-
 
 
 def writeobj(fn,v,f):
@@ -17,7 +16,3 @@ def writeobj(fn,v,f):
 
         np.apply_along_axis(lambda x: fp.write('v {} {} {}\n'.format(x[0], x[1], x[2])), axis=1, arr=v)
         np.apply_along_axis(lambda x: fp.write('f {:d} {:d} {:d}\n'.format(x[0], x[1], x[2])), axis=1, arr=f.astype(int)+1)
-
-
-
-

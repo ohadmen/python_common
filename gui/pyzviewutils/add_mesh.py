@@ -1,8 +1,8 @@
 import numpy as np
 
+from ..apply_colormap import apply_colormap
 from .add_color import add_color
 from .get_trimesh_indices import get_trimesh_indices
-from ..apply_colormap import apply_colormap
 
 
 def add_mesh(xyz, col=None):
