@@ -9,7 +9,7 @@ def colvec2rgba(n,col):
     colmat = colmat*col
     return colmat
 
-def addColor(xyz, col):
+def add_color(xyz, col):
     xyz = xyz.astype(np.float32)
     if isinstance(col, str):
         if col == 'r':
@@ -30,8 +30,9 @@ def addColor(xyz, col):
         pass
     elif len(col) == 3 or len(col) == 4:
         col = colvec2rgba(xyz.shape[0],col)
-    elif isinstance(col, np.ndarray) and col.shape == xyz.shape:
-        col=np.expand_dims(col,0)
+    elif isinstance(col, np.ndarray) and col.shape[2] == 3:
+        col=np.concatenate([col,np.ones((col.shape[0],col.shape[1],1))],axis=2)
+    elif isinstance(col, np.ndarray) and col.shape[2] == 4:
         pass
     else:
         raise RuntimeError("unknown color option")

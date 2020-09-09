@@ -1,8 +1,6 @@
 import numpy as np
 
-from common.gui.pyzviewutils.addColor import addColor
-from common.gui.pyzviewutils.add_rectangle import add_rectangle
-from common.pcl.bresenham3d import bresenham3d
+from .bresenham3d import bresenham3d
 
 import common.gui.pyzview as zview
 

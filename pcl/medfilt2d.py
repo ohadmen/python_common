@@ -1,6 +1,6 @@
 import numpy as np
 
-from common.utils.im2vindx import im2vindx
+from ..utils.im2vindx import im2vindx
 
 
 def medfilt2d(xyz, ksz):
