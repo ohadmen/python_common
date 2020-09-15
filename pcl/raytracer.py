@@ -1,6 +1,6 @@
 import numpy as np
 
-import common.gui.pyzview as zview
+
 
 from .bresenham3d import bresenham3d
 
