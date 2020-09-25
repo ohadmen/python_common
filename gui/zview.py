@@ -58,18 +58,22 @@ class Zview:
         if color:
             if isinstance(color, str):
                 xyzrgba[:, 3:6] = np.array(cls._str2rgb(color))
-            if hasattr(color, '__len__'):
+            elif hasattr(color, '__len__'):
                 if len(color) == 3:
                     xyzrgba[:, 3:6] = np.array(color)
                 if len(color) == n:
                     xyzrgba[:, 3:6] = np.array(color)
                 else:
-                    raise RuntimeError("unknonw color option")
+                    raise RuntimeError("unknown color option")
         rgba = cls._rgba2floatcol(xyzrgba[:, 3:])
         return np.c_[xyz[:, :3].astype(np.float32), rgba]
 
     def __init__(self):
         self.zv = m.interface()  # get interface
+        s = np.sqrt(3) / 2
+        self.marker = {'v': np.array([[-1, -s, 0], [0, 2 * s, 0], [1, -s, 0], [0, 0, 2 * s]]) / 2,
+                       'f': np.array([[0, 3, 1], [1, 3, 2], [0, 2, 3], [0, 2, 1]]),
+                       'counter': 0}
 
     def _set_cam_look_at(self, e, c, u):
         e, c, u = [x.tolist() if isinstance(x, np.ndarray) else x for x in [e, c, u]]
@@ -78,13 +82,26 @@ class Zview:
     def remove_shape(self, k):
         return self.zv.removeShape(k)
 
+    def add_marker(self, pt, color=None, scale=1):
+        xyzf = self._get_pts_arr(self.marker['v'] * scale + pt, color, 1)
+        faces = self.marker['f']
+        k = self.zv.addColoredMesh('marker-{}'.format(self.marker['counter']), xyzf, faces)
+        self.marker['counter'] = self.marker['counter'] + 1
+        if k == -1:
+            raise RuntimeWarning("could not get response from zview app")
+        return k
+
+    def update_marker(self, handle, pt, color=None, scale=1):
+        xyzf = self._get_pts_arr(self.marker['v'] * scale + pt, color, 1)
+        self.zv.updateColoredPoints(handle, xyzf)
+
     def add_mesh(self, string, xyz, color=None, alpha=None):
         if len(xyz.shape) != 3:
             raise RuntimeError("expecting nxmxD for D>=3")
         xyzf = self._get_pts_arr(xyz, color, alpha)
         faces = get_trimesh_indices(xyz.shape)
         k = self.zv.addColoredMesh(string, xyzf, faces)
-        if k==-1:
+        if k == -1:
             raise RuntimeWarning("could not get response from zview app")
         return k
 
@@ -96,7 +113,6 @@ class Zview:
     def update_points(self, handle, xyz, color=None, alpha=None):
         xyzf = self._get_pts_arr(xyz, color, alpha)
         self.zv.updateColoredPoints(handle, xyzf)
-
 
     KEY_ESC = 16777216
     KEY_ENTER = 16777220
