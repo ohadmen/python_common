@@ -61,7 +61,7 @@ class Zview:
             elif hasattr(color, '__len__'):
                 if len(color) == 3:
                     xyzrgba[:, 3:6] = np.array(color)
-                if len(color) == n:
+                elif len(color) == n:
                     xyzrgba[:, 3:6] = np.array(color)
                 else:
                     raise RuntimeError("unknown color option")

@@ -10,6 +10,7 @@ def cpm(v):
 
 
 def rotation_matrix(rot_vec):
+    rot_vec = np.array(rot_vec)
     angle = np.linalg.norm(rot_vec)
     axis = rot_vec / angle
     c = cpm(axis)
