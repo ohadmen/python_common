@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 
 from common.utils.ellipse2d import Ellipse2d
-import matplotlib.pyplot as plt
+
 
 class TestEllipse2d(unittest.TestCase):
 
@@ -12,6 +12,7 @@ class TestEllipse2d(unittest.TestCase):
         c = np.random.randn(2)
         angle = np.random.rand() * np.pi
         ll = np.random.rand(2)
+
         elps = Ellipse2d(c, angle, ll)
         return elps
 
@@ -33,16 +34,20 @@ class TestEllipse2d(unittest.TestCase):
             return True
 
     def test_dist(self):
-        n = 100
-        for i in range(1000):
+        n = 64
+        for i in range(100):
             elps = self._random_ellipse(i)
             pts = elps.get_points(n)
             d = elps.dist(pts)
-            d = np.linalg.norm(d,axis=1)
-            if np.any(d > np.finfo(float).eps * 1e3):
+            dn = np.linalg.norm(d,axis=1)
+            if np.any(dn > np.finfo(float).eps * 1e6):
                 self.fail()
-            v = np.random.randn(*pts.shape)*0.1
-            # e = elps.dist(pts+v-d)
+            v = np.random.randn(*pts.shape) * 0.1
+            d = elps.dist(pts + v)
+            e = elps.dist(pts + v - d)
+            en = np.linalg.norm(e, axis=1)
+            if np.any(en > np.finfo(float).eps * 1e6):
+                self.fail()
 
 
 if __name__ == "__main__":

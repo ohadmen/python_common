@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Ellipse2d:
@@ -47,45 +48,49 @@ class Ellipse2d:
         return Ellipse2d(c, angle, length), err
 
     def dist(self, p, eps: float = np.finfo(float).eps * 1e3):
+        n_max_itr = 1000
         # source: https://wet-robots.ghost.io/simple-method-for-distance-to-ellipse/
         p_ = p - self.center
         axes = self._get_axes()
         p_ = p_ @ axes
-        nz = np.zeros(p.shape[0])
-        px = p_[:, 0]
-        py = p_[:, 1]
 
-        is_inside = nz == 1
-        t = np.pi / 4 + nz
-        t[~is_inside] = np.arctan2(py, px)
+        t = np.arctan2(np.sign(p_[:, 1]), np.sign(p_[:, 0]))
         a = self.length[0]
         b = self.length[1]
+        det = a * a - b * b
+        i = 0
+
+        # plt.plot(*((self.get_points(64) - self.center) @ axes).T)
+        # plt.plot(*p_.T,'+r')
 
         while True:
-            x = a * np.cos(t)
-            y = b * np.sin(t)
+            ct, st = np.cos(t), np.sin(t)
+            xy = np.c_[a * ct, b * st]
+
+            # plt.plot(*xy[32].T, '*b')
+
             # Centre of curvature at current estimate
-            ex = (a * a - b * b) * np.cos(t) ** 3 / a
-            ey = (b * b - a * a) * np.sin(t) ** 3 / b
+            ee = np.c_[ct ** 3 / a, -st ** 3 / b] * det
 
-            rx = x - ex
-            ry = y - ey
+            rv = xy - ee
+            qv = p_ - ee
 
-            qx = px - ex
-            qy = py - ey
+            rn = np.linalg.norm(rv, axis=1)
+            qn = np.linalg.norm(qv, axis=1)
+            delta_c = rn * np.arcsin(np.cross(rv, qv) / (rn * qn))
 
-            r = np.hypot(ry, rx)
-            q = np.hypot(qy, qx)
+            delta_t = delta_c / np.sqrt((a * st) ** 2 + (b * ct) ** 2)
+            # to increase numerical stability decrease step size
+            delta_t = delta_t *0.25
 
-            delta_c = r * np.arcsin((rx * qy - ry * qx) / (r * q))
-            delta_t = delta_c / np.sqrt(a ** 2 + b ** 2 - x ** 2 - y ** 2)
             if np.all(np.abs(delta_t) < eps):
                 break
             t += delta_t
-            # t = np.clip(0, np.pi / 2, t)
 
-        # q = np.c_[np.copysign(x, p[:, 0]), np.copysign(y, p[:, 1])]
-        q = np.c_[x, y]
-        q = q @ axes.T + self.center
-        d = p - q
+            if i == n_max_itr:
+                raise RuntimeError("ellispe distance could not converge!")
+            else:
+                i = i + 1
+
+        d = (p_ - xy) @ axes.T
         return d
