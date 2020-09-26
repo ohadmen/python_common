@@ -2,17 +2,23 @@ import unittest
 import numpy as np
 
 from common.utils.ellipse2d import Ellipse2d
-
+import matplotlib.pyplot as plt
 
 class TestEllipse2d(unittest.TestCase):
+
+    @staticmethod
+    def _random_ellipse(seed):
+        np.random.seed(seed)
+        c = np.random.randn(2)
+        angle = np.random.rand() * np.pi
+        ll = np.random.rand(2)
+        elps = Ellipse2d(c, angle, ll)
+        return elps
+
     def test_fit(self):
         n = 100
         for i in range(1000):
-            np.random.seed(i)
-            c = np.random.randn(2)
-            angle = np.random.rand() * np.pi
-            ll = np.random.rand(2)
-            ellipse_ref = Ellipse2d(c, angle, ll)
+            ellipse_ref = self._random_ellipse(i)
             pts = ellipse_ref.get_points(n)
             ellipse_hat, err = Ellipse2d.fit(pts)
 
@@ -25,6 +31,18 @@ class TestEllipse2d(unittest.TestCase):
             if np.any(np.abs(ellipse_hat.center - ellipse_ref.center) > eps):
                 self.fail()
             return True
+
+    def test_dist(self):
+        n = 100
+        for i in range(1000):
+            elps = self._random_ellipse(i)
+            pts = elps.get_points(n)
+            d = elps.dist(pts)
+            d = np.linalg.norm(d,axis=1)
+            if np.any(d > np.finfo(float).eps * 1e3):
+                self.fail()
+            v = np.random.randn(*pts.shape)*0.1
+            # e = elps.dist(pts+v-d)
 
 
 if __name__ == "__main__":
