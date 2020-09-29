@@ -55,7 +55,7 @@ class Zview:
 
         if alpha:
             xyzrgba[:, -1] = alpha
-        if color:
+        if color is not None:
             if isinstance(color, str):
                 xyzrgba[:, 3:6] = np.array(cls._str2rgb(color))
             elif hasattr(color, '__len__'):
@@ -63,6 +63,10 @@ class Zview:
                     xyzrgba[:, 3:6] = np.array(color)
                 elif len(color) == n:
                     xyzrgba[:, 3:6] = np.array(color)
+                elif color.size // 3 == n:
+                    xyzrgba[:, 3:6] = color.reshape(-1, 3)
+                elif color.size//4==n:
+                    xyzrgba[:, 3:7]=color.reshape(-1,4)
                 else:
                     raise RuntimeError("unknown color option")
         rgba = cls._rgba2floatcol(xyzrgba[:, 3:])
