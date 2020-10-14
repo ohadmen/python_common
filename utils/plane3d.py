@@ -25,8 +25,13 @@ class Plane3d:
     def __repr__(self):
         return "n=({},{},{}), d = {}".format(*self.normal, self.d)
 
+    def project(self, x):
+        e = self.dist(x)
+        xp = x - e
+        return xp
+
     def dist(self, x):
-        d = x@self.normal + self.d
+        d = x @ self.normal + self.d
         return d
 
     @staticmethod
@@ -34,4 +39,4 @@ class Plane3d:
         a = np.c_[np.ones(xyz.shape[0]), xyz]
         th = np.r_[clsq(a, 3)]
         err = a @ th
-        return Plane3d(th[1:], -th[1:]*th[0]), err
+        return Plane3d(th[1:], -th[1:] * th[0]), err
