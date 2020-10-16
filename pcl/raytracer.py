@@ -1,11 +1,7 @@
 import numpy as np
+from . import bresenham3d
 
 
-
-from .bresenham3d import bresenham3d
-
-
-# zv = zview.interface()
 class Raytracer:
 
     def _ray_trimesh_intersection(self, rp, rn, triv):
@@ -37,7 +33,7 @@ class Raytracer:
         t = (uv * wu - uu * wv) / d
         if t < 0 or (s + t) > 1:
             return np.inf, 0
-        intensity = max(0,-b / np.linalg.norm(n))
+        intensity = max(0, -b / np.linalg.norm(n))
         return r, intensity
 
     def _ray_vol_intersection(self, q, n):
@@ -89,12 +85,6 @@ class Raytracer:
                     for z in range(mn[2], mx[2] + 1):
                         self.vol[x][y][z].append(ii)
 
-        # for x in range(self.dim[0]):
-        #     for y in range(self.dim[1]):
-        #         for z in range(self.dim[2]):
-        #             zv.addColoredMesh("cube{}{}{}".format(x,y,z), *add_rectangle(t=np.array([x, y, z]) * self.sz, s=(self.sz, self.sz, self.sz),c=(1,1,0,0.2)))
-        #             zv.addMesh("mesh{}{}{}".format(x,y,z),self.v,self.f[self.vol[x][y][z]])
-
     def trace(self, p, n):
 
         # zv.addEdges("ray", np.c_[p, p + n].T.copy(), np.array([[0, 1]]))
@@ -107,19 +97,17 @@ class Raytracer:
 
         qlist = bresenham3d(q1, q2)
         qlist = np.array(qlist)
-        qlist = (qlist[1:]+qlist[:-1])/2
+        qlist = (qlist[1:] + qlist[:-1]) / 2
         qlist = qlist.astype(int)
         checked_faces = set()
         for q in qlist:
             if np.any(q < 0) or np.any(q >= self.dim):
                 continue
             f_list = self.vol[q[0]][q[1]][q[2]]
-            f_list = [x for x in f_list if x not in checked_faces] #remove check
+            f_list = [x for x in f_list if x not in checked_faces]  # remove check
             if len(f_list) == 0:
                 continue
-            # zv.addColoredMesh('mesh', addColor(self.v, 'r'), self.f[f_list])
-            # zv.addColoredMesh("cube", *add_rectangle(t=q * self.sz, s=(self.sz, self.sz, self.sz), c=[1, 0, 0, 0.2]))
-            rr, ii = zip(*[self._ray_trimesh_intersection(p, n, self.v[self.f[ii]]) for ii in f_list ])
+            rr, ii = zip(*[self._ray_trimesh_intersection(p, n, self.v[self.f[ii]]) for ii in f_list])
             ind = np.argmin(rr)
             if rr[ind] != np.inf:
                 r = rr[ind]
