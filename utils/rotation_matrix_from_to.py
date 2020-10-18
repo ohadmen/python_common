@@ -1,6 +1,6 @@
 import numpy as np
 
-from common.utils.rotation_matrix import rotation_matrix
+from . import rotation_matrix
 
 
 def rotation_matrix_from_to(src: np.ndarray, dst: np.ndarray):

@@ -1,6 +1,6 @@
 import numpy as np
 
-from common.utils.rotation_matrix import rotation_matrix
+from .rotation_matrix import rotation_matrix
 
 
 def create_transformation(rot_vec, tran_vec, scale_vec=None):
