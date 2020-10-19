@@ -27,7 +27,7 @@ class Plane3d:
 
     def project(self, x):
         e = self.dist(x)
-        xp = x - e
+        xp = x - e.reshape(-1,1)*self.normal
         return xp
 
     def dist(self, x):

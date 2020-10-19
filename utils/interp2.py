@@ -30,10 +30,10 @@ def interp2(xg, yg, v, xn, yn):
     x1 = x0 + 1
     y1 = y0 + 1
 
-    dx1 = x_ - x0
-    dx0 = x1 - x_
-    dy1 = y_ - y0
-    dy0 = y1 - y_
+    dx1 = (x_ - x0).reshape(-1,1)
+    dx0 = (x1 - x_).reshape(-1,1)
+    dy1 = (y_ - y0).reshape(-1,1)
+    dy0 = (y1 - y_).reshape(-1,1)
 
     q00 = v[y0, x0]
     q01 = v[y0, x1]

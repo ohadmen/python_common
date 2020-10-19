@@ -14,7 +14,7 @@ def line_set_intersection_point(p: np.ndarray, n: np.ndarray):
     :param n: Nx3 matrix, line normals
     """
 
-    assert (p.shape[1] == 3, "data dim should be 3")
+    assert p.shape[1] == 3, "data dim should be 3"
     assert (np.all(n.shape == p.shape))
     b = np.cross(n, p).flatten()
     a_mat = -np.vstack([cpm(x) for x in n])
