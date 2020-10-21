@@ -7,13 +7,13 @@ def tform_from_correspondence(src: np.ndarray, dst: np.ndarray):
     mdst = np.mean(dst, axis=0)
 
     h = (src - msrc).T @ (dst - mdst)
-    u, s, vt = np.linalg.svd(h)
+    v, s, w = np.linalg.svd(h)
+    d = (np.linalg.det(v) * np.linalg.det(w)) < 0.0
+    if d:
+        s[-1] *= -1
+        v[:, -1] *= -1
+    matR = (v @ w).T
 
-    matR = (u @ vt).T
-
-    if np.linalg.det(matR) < 0:
-        vt[:, -1] = -1
-        matR = (u @ vt).T
     tform = np.eye(4)
     tform[:3, -1] = mdst - matR @ msrc
     tform[:3, :3] = matR
