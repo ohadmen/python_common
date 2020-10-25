@@ -12,6 +12,8 @@ def cpm(v):
 def rotation_matrix(rot_vec):
     rot_vec = np.array(rot_vec)
     angle = np.linalg.norm(rot_vec)
+    if angle==0:
+        return np.eye(3)
     axis = rot_vec / angle
     c = cpm(axis)
     r = np.eye(3) + c * np.sin(angle) + (1 - np.cos(angle)) * c @ c
