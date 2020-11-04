@@ -12,3 +12,4 @@ from .rotation_matrix_from_to import rotation_matrix_from_to
 from .rotation_matrix import rotation_matrix
 from .tform_from_correspondence import tform_from_correspondence
 from .tps import TPS
+from .singelton import Singleton
