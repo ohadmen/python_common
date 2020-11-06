@@ -1,3 +1,4 @@
+from .apply_colormap import apply_colormap
 from .apply_transformation import apply_transformation
 from .clsq import clsq
 from .create_transformation import create_transformation
