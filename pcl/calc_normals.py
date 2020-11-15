@@ -1,5 +1,5 @@
 import numpy as np
-
+import warnings
 
 def norm(v):
     nn = np.linalg.norm(v, axis=2)
@@ -21,8 +21,10 @@ def calc_normals(xyz):
     vr = np.roll(xyz, 1, axis=1)-xyz
     vd = np.roll(xyz, 1, axis=0)-xyz
     vl = np.roll(xyz, -1, axis=1)-xyz
-    n = np.stack((crossN(vu,vl),crossN(vl,vd),crossN(vd,vr),crossN(vr,vu)))
-    n = np.stack([np.nanmedian(n[:,:,:,i],axis=0) for i in range(3)],axis=2)
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        n = np.stack((crossN(vu,vl),crossN(vl,vd),crossN(vd,vr),crossN(vr,vu)))
+        n = np.stack([np.nanmedian(n[:,:,:,i],axis=0) for i in range(3)],axis=2)
     n = norm(n)
     #reorient = np.sum(n * xyz, axis=2) > 0
     #n[reorient] *=-1
